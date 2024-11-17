@@ -1,64 +1,12 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 
-const GRID_SIZE = 12
-const INITIAL_PLAYER_POS = { x: 0, y: 0 }
-const INITIAL_ENEMIES = [
-  { x: 11, y: 11 },
-  { x: 11, y: 0 },
-  { x: 0, y: 11 },
-  { x: 5, y: 5 },
-  { x: 7, y: 7 },
-  { x: 3, y: 9 },
-]
-const INITIAL_FOOD = [
-  { x: 3, y: 3 },
-  { x: 3, y: 8 },
-  { x: 8, y: 3 },
-  { x: 8, y: 8 },
-  { x: 2, y: 2 },
-  { x: 2, y: 9 },
-  { x: 9, y: 2 },
-  { x: 9, y: 9 },
-]
-
-const AVATARS = [
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FrogSuperform__1-ITDMHNiPxG3Y5nJ3sUUmgPHcaAEVW2.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/chad_finish-u8kDRSefTNC961PNSk9oDyVBs6Tw8A.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-01-gAjjMJfjOgWrO6diYOEaF7Yge2Ok81.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_7519.PNG-EhDRiHoEQ3y3FzOZmgxmN7pE8VP6nX.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/crouton-3R0vEjxzy5GUXbfKQvi6gVtu2X4XlJ.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/for_video-BydBiHUpXRjxi58oC7GgyyF1EQEv2x.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/24-27df9QIntZmoT02lQFwS87Ck47B8LL.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/38-hIkQijZoYkT7P7LgJVmpttsRoEXXCM.png"
-]
-
-const PIGGY_IMAGES = [
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Drool%20-%20rifolin-DpTYKK2zhcx6VbSLUhTsPxn7RsXH4v.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Hmm%20-%20rifolin-QkPNUC7I3la46g3USm2aoy6F1BuT2i.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Angry%20-%20rifolin-OTuntp6G1gQOZotDPf68fjMhAyZyXW.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20French%20-%20rifolin-saVhWMZkVs7iD4uapOpT2c3E9OAHvl.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Rekt%20-%20rifolin-Ni4WDi3t8y61Uuut2YG3Ljt7zEUH6C.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Pyramid%20-%20rifolin-ZrGtqAjKnupr0sqtcnfu3Iwf9Kb87F.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Cool%20-%20rifolin-zbz5NO65bdVHhXUn4zxXAxdSf706xz.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Sad%20-%20rifolin-WmWaANoQC9SrCTf2K63RvVfAOAbkVO.png',
-  'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Piggy%20Redeye%20-%20rifolin-1bTF8Y9VGwHhe3yf2a1uCjNXjwQaE6.png',
-]
-
-const ENEMY_IMAGES = {
-  0: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-oF8OHlMohXJ9MrIIO57lVMrUWu55YH.png",
-  1: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-1-ZKbZLxkkn6mgMLI9jAY0sYMbKvjjsM.png",
-  2: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-2-puqK7HTjojV52SzdHMv8LEeqgtbzHE.png",
-  3: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-3-mDJfWWshKN2a4mtzBppQhjTxcjefiL.png",
-  4: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-4-Rf5ajYEsuNZWIhAcGIwe7ltx5g8UKR.png",
-  5: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-5-EnUJZvLyBaradKJXfqYgOgrTxDP661.png",
-  6: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bronze-6-Fi1Vm2KUkrQroJporUV6yndDz3fQs5.png"
-}
+// ... (keep all the constants as they are)
 
 type Position = { x: number; y: number }
 
@@ -68,15 +16,7 @@ type LeaderboardEntry = {
   tournament: number;
 }
 
-const updateLeaderboard = () => {
-  setLeaderboard(prev => {
-    const newEntry = { nickname, score, tournament }
-    const newLeaderboard = [...prev, newEntry].sort((a, b) => b.score - a.score).slice(0, 10)
-    return newLeaderboard
-  })
-}
-
-export default function Component() {
+export default function Game() {
   const [playerPos, setPlayerPos] = useState<Position>(INITIAL_PLAYER_POS)
   const [enemies, setEnemies] = useState<Position[]>(INITIAL_ENEMIES)
   const [food, setFood] = useState<Position[]>(INITIAL_FOOD)
@@ -91,8 +31,13 @@ export default function Component() {
   const [showAvatarSelect, setShowAvatarSelect] = useState(false)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [timeRemaining, setTimeRemaining] = useState(30)
-  const [lastMoveTime, setLastMoveTime] = useState(Date.now())
-  const [moveCount, setMoveCount] = useState(0)
+
+  const updateLeaderboard = useCallback(() => {
+    setLeaderboard(prev => {
+      const newEntry = { nickname, score, tournament }
+      return [...prev, newEntry].sort((a, b) => b.score - a.score).slice(0, 10)
+    })
+  }, [nickname, score, tournament])
 
   const startAvatarSelect = () => {
     if (nickname.trim() !== '') {
@@ -119,8 +64,6 @@ export default function Component() {
     setGameOver(false)
     setGameWon(false)
     setTimeRemaining(30)
-    setLastMoveTime(Date.now())
-    setMoveCount(0)
     const randomFoodImages = INITIAL_FOOD.map(() => 
       PIGGY_IMAGES[Math.floor(Math.random() * PIGGY_IMAGES.length)]
     )
@@ -162,10 +105,8 @@ export default function Component() {
   const movePlayer = useCallback((dx: number, dy: number) => {
     if (gameOver || gameWon) return
 
-    setLastMoveTime(Date.now());
-
     setPlayerPos((prev) => {
-      let newPos = { x: prev.x + dx, y: prev.y + dy }
+      const newPos = { x: prev.x + dx, y: prev.y + dy }
       
       if (newPos.x < 0) newPos.x = GRID_SIZE - 1
       if (newPos.x >= GRID_SIZE) newPos.x = 0
@@ -199,14 +140,8 @@ export default function Component() {
       })
     )
 
-    setMoveCount((prevCount) => {
-      const newCount = prevCount + 1
-      if (newCount % 3 === 0) {
-        addRandomPig()
-      }
-      return newCount
-    })
-  }, [gameOver, gameWon, enemies, food, foodImages, addRandomPig])
+    addRandomPig()
+  }, [gameOver, gameWon, enemies, food, addRandomPig, updateLeaderboard])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -255,9 +190,9 @@ export default function Component() {
 
       return () => clearInterval(timer)
     }
-  }, [gameStarted, gameOver, gameWon])
+  }, [gameStarted, gameOver, gameWon, updateLeaderboard])
 
-  const getEnemyImage = useCallback((level: number) => {
+  const getEnemyImage = useMemo(() => (level: number) => {
     return ENEMY_IMAGES[level] || ENEMY_IMAGES[0]
   }, [])
 
