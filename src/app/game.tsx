@@ -108,6 +108,7 @@ export default function Component() {
   }
 
   const resetGame = useCallback(() => {
+  // Check dependencies
     if (gameWon || gameOver) {
       updateLeaderboard()
     }
@@ -132,6 +133,7 @@ export default function Component() {
   }, [resetGame])
 
   const addRandomPig = useCallback(() => {
+  // Check dependencies
     const newPigPos = {
       x: Math.floor(Math.random() * GRID_SIZE),
       y: Math.floor(Math.random() * GRID_SIZE)
@@ -165,7 +167,7 @@ export default function Component() {
     setLastMoveTime(Date.now());
 
     setPlayerPos((prev) => {
-      let newPos = { x: prev.x + dx, y: prev.y + dy }
+      const newPos = { x: prev.x + dx, y: prev.y + dy }
       
       if (newPos.x < 0) newPos.x = GRID_SIZE - 1
       if (newPos.x >= GRID_SIZE) newPos.x = 0
@@ -418,4 +420,3 @@ export default function Component() {
     </div>
   )
 }
-
