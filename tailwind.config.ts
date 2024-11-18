@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import { type PluginAPI } from 'tailwindcss/types/config'
 
 const config: Config = {
   darkMode: ["class"],
@@ -76,11 +75,16 @@ const config: Config = {
     },
   },
   plugins: [
-    function ({ addBase, theme }: PluginAPI) {
-      addBase({
-        '.animate-accordion-down': { animation: theme('animation.accordion-down') },
-        '.animate-accordion-up': { animation: theme('animation.accordion-up') },
-      })
+    // Add the animation plugin directly here
+    ({ addUtilities }) => {
+      addUtilities({
+        ".animate-accordion-down": {
+          animation: "accordion-down 0.2s ease-out",
+        },
+        ".animate-accordion-up": {
+          animation: "accordion-up 0.2s ease-out",
+        },
+      });
     },
   ],
 }
