@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import { fontFamily } from 'tailwindcss/defaultTheme'
 
 const config: Config = {
   darkMode: ["class"],
@@ -7,8 +8,7 @@ const config: Config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-  ],
-  prefix: "",
+	],
   theme: {
     container: {
       center: true,
@@ -58,6 +58,9 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -74,19 +77,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    // Add the animation plugin directly here
-    ({ addUtilities }) => {
-      addUtilities({
-        ".animate-accordion-down": {
-          animation: "accordion-down 0.2s ease-out",
-        },
-        ".animate-accordion-up": {
-          animation: "accordion-up 0.2s ease-out",
-        },
-      });
-    },
-  ],
-}
+  plugins: [require("tailwindcss-animate")],
+} as const
 
 export default config
